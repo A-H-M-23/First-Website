@@ -1,0 +1,78 @@
+﻿@model IEnumerable<DataLayer.PageGroup>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Index</h2>
+
+<p>
+    <a class="btn btn-success btn-lg" id="btnNewGroup">افزودن گروه جدید</a>
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.GroupTitle)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.GroupTitle)
+            </td>
+            <td>
+                <a class="btn btn-warning btn-m" onclick="EditGroup(@item.GroupID)" ><i class="glyphicon glyphicon-edit"></i></a>
+                <a class="btn btn-danger btn-m" onclick="DeleteGroup(@item.GroupID)" ><i class="glyphicon glyphicon-trash"></i></a>
+            </td>
+        </tr>
+    }
+
+</table>
+
+<!-- #region Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+            </div>
+            <div class="modal-body" id="exampleModalBody">
+            </div>
+        </div>
+    </div>
+</div>
+<!-- #endregion -->
+
+<!-- #region Scripts -->
+@section scripts
+{
+    <script src="~/Scripts/modal.js"></script>
+    <script>
+        $("#btnNewGroup").click(function () {
+            $.get("/Admin/PageGroups/Create", function (result) {
+                $("#exampleModal").modal();
+                $("#exampleModalLabel").html("افزودن گروه جدید");
+                $("#exampleModalBody").html(result);
+            });
+        });
+
+        function EditGroup(ID) {
+            $.get("/Admin/PageGroups/Edit/" + ID, function (result) {
+                $("#exampleModal").modal();
+                $("#exampleModalLabel").html("ویرایش گروه");
+                $("#exampleModalBody").html(result);
+            });
+        }
+
+        function DeleteGroup(ID) {
+            $.get("/Admin/PageGroups/Delete/" + ID, function (result) {
+                $("#exampleModal").modal();
+                $("#exampleModalLabel").html("حذف گروه");
+                $("#exampleModalBody").html(result);
+            });
+        }
+    </script>
+}
+<!-- #endregion -->
